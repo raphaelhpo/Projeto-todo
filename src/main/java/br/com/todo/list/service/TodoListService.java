@@ -1,8 +1,43 @@
 package br.com.todo.list.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
+
+import br.com.todo.list.dto.create.TaskCreateDTO;
+import br.com.todo.list.dto.response.TaskResponseDTO;
+import br.com.todo.list.mapper.TaskMapper;
+import br.com.todo.list.model.Task;
+import br.com.todo.list.repository.TodoListRepository;
 
 @Service
 public class TodoListService {
+    TodoListRepository repository;
+
+    private TodoListService(TodoListRepository repository) {
+        this.repository = repository;
+    }
+
+    public TaskResponseDTO criarTask(TaskCreateDTO taskDto) {
+        Task taskCriada = repository.save(TaskMapper.toEntity(taskDto));
+        return TaskMapper.toResponse(taskCriada);
+    }
+
+    // Função provisória
+    public List<TaskResponseDTO> consultarTodasTasks() {
+        List<TaskResponseDTO> response = repository.findAll().stream()
+                .map(task -> TaskMapper.toResponse(task))
+                .collect(Collectors.toList());
+        return response;
+    }
+
+    public TaskResponseDTO consultarTask(UUID uuid) {
+        return repository.findById(uuid)
+                .map(task -> TaskMapper.toResponse(task))
+                .orElseThrow(() -> new RuntimeException("Item do UUID Não encontrado."));
+    }
 
 }
