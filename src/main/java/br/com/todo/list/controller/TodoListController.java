@@ -21,7 +21,7 @@ import br.com.todo.list.service.TodoListService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("todolist/")
+@RequestMapping("api/todolist/")
 public class TodoListController {
     TodoListService service;
 
@@ -61,17 +61,18 @@ public class TodoListController {
     }
 
     @PutMapping("/concluir/task/{id}")
-    public void concluirTask(@PathVariable String id) {
-
+    public ResponseEntity<TaskResponseDTO> concluirTask(@PathVariable UUID id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.concluirTask(id));
+        } catch (Exception e) {
+            // TODO: handle exception
+            throw new RuntimeException("Erro ao concluir task.", e.getCause());
+        }
     }
 
-    @PutMapping("/atualizar/status/task/{id}")
-    public void atualizarStatusTask(@PathVariable String id) {
-    }
-
-    @DeleteMapping()
-    public void excluirTask(@PathVariable String id) {
-
+    @DeleteMapping("/deletar/task/{id}")
+    public void excluirTask(@PathVariable UUID id) {
+        service.deletarTask(id);
     }
 
 }

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link th:href="@{/css/tabler.min.css}" rel="stylesheet">
+</head>
+
+<div class="modal fade" id="modalCriarTask" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nova Tarefa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form th:action="@{/criar}" th:object="${taskForm}" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Título</label>
+                        <input type="text" class="form-control" th:field="*{titulo}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descrição</label>
+                        <input type="text" class="form-control" th:field="*{descricao}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Prioridade</label>
+                        <select class="form-select" th:field="*{prioridade}">
+                            <option value="BAIXA">Baixa</option>
+                            <option value="MEDIA">Média</option>
+                            <option value="ALTA">Alta</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Data de Finalização</label>
+                        <input type="date" class="form-control" th:field="*{dataFinalizacao}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Criar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<body class="antialiased">
+    <div class="container mt-4">
+        <h1 class="mb-4">Minhas Tasks</h1>
+
+        <div class="row">
+            <p class="mt-2">
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalCriarTask">Criar
+                    Nova Tarefa</button>
+            </p>
+            <div class="col-md-4" th:each="task : ${tasks}">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${task.titulo}"></h5>
+                        <p class="card-text" th:text="${task.descricao}"></p>
+
+                        <!-- badge de status -->
+                        <span class="badge bg-warning" th:text="${task.status}"></span>
+
+                        <!-- badge de prioridade -->
+                        <span class="badge bg-danger" th:text="${task.prioridade}"></span>
+                        <p class="mt-2">
+                            <button class="btn btn-outline-success btn-sm">Concluir Tarefa</button>
+                            <button class="btn btn-outline-danger btn-sm">Deletar Tarefa</button>
+                        </p>
+                        <p class="mt-2">
+                            <small th:text="${task.dataFinalizacao}"></small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/tabler.min.js}"></script>
+</body>
+
+</html>
