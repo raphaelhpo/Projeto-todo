@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.todo.list.dto.create.TaskCreateDTO;
 import br.com.todo.list.dto.response.TaskResponseDTO;
+import br.com.todo.list.enums.Status;
 import br.com.todo.list.mapper.TaskMapper;
 import br.com.todo.list.model.Task;
 import br.com.todo.list.repository.TodoListRepository;
@@ -37,7 +38,21 @@ public class TodoListService {
     public TaskResponseDTO consultarTask(UUID uuid) {
         return repository.findById(uuid)
                 .map(task -> TaskMapper.toResponse(task))
-                .orElseThrow(() -> new RuntimeException("Item do UUID Não encontrado."));
+                .orElseThrow(() -> new RuntimeException("Task do UUID Não encontrado."));
     }
 
+    public TaskResponseDTO concluirTask(UUID uuid) {
+        Task task = repository.findById(uuid).orElseThrow(() -> new RuntimeException("Task do UUID Não encontrado."));
+        if (task.getStatus().equals(Status.CONCLUIDA)) {
+            throw new RuntimeException("Task já concluída.");
+        } else {
+            task.setStatus(Status.CONCLUIDA);
+            repository.save(task);
+        }
+        return TaskMapper.toResponse(task);
+    }
+
+    public void deletarTask(UUID id) {
+        repository.deleteById(id);
+    }
 }
