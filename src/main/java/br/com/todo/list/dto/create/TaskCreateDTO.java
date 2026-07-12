@@ -11,8 +11,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class TaskCreateDTO {
     @NotBlank
@@ -21,11 +23,13 @@ public class TaskCreateDTO {
     private String descricao;
     @JsonIgnore
     private Status status;
-    private Prioridade prioridade = Prioridade.MEDIA;
+    @NotBlank
+    private Prioridade prioridade;
     @JsonIgnore
     private LocalDate dataCriacao;
     @JsonIgnore
     private LocalDate dataConclusao;
+    @NotBlank
     private LocalDate dataFinalizacao;
 
     public TaskCreateDTO(String titulo,
