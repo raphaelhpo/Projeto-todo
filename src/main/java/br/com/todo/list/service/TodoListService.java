@@ -1,5 +1,6 @@
 package br.com.todo.list.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -53,6 +54,7 @@ public class TodoListService {
             throw new RuntimeException("Task já concluída.");
         } else {
             task.setStatus(Status.CONCLUIDA);
+            task.setDataConclusao(LocalDate.now());
             repository.save(task);
         }
         return TaskMapper.toResponse(task);
