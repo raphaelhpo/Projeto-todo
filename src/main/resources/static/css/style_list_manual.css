@@ -16,5 +16,12 @@ body {
 
 .card {
     width: 300px;
+    height: 360px;
     padding: 1rem;
+}
+
+.card-body p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

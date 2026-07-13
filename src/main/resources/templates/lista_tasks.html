@@ -37,21 +37,37 @@
                     <h3 class="card-title" th:text="${task.titulo}"></h3>
                 </div>
                 <div class="card-body">
-                    <p class="text-secondary" th:text="${task.descricao}"></p>
-                    <p class="text-secondary" th:text="${task.status}"></p>
-                    <p class="text-secondary" th:text="${task.prioridade}"></p>
-                    <p class="text-secondary" th:text="${task.dataCriacao}"></p>
-                    <p class="text-secondary" th:text="${task.dataFinalizacao}"></p>
+                    <p class="text-secondary">
+                        <strong><span>Descrição:</span></strong>
+                        <span th:text="${task.descricao}"></span>
+                    </p>
+                    <p class="text-secondary">
+                        <strong><span>Status:</span></strong>
+                        <span th:text="${task.status}"></span>
+                    </p>
+                    <p class="text-secondary">
+                        <strong><span>Prioridade:</span></strong>
+                        <span th:text="${task.prioridade}"></span>
+                    </p>
+                    <p class="text-secondary">
+                        <strong><span>Data de Criação:</span></strong>
+                        <span th:text="${#temporals.format(task.dataCriacao, 'dd/MM/yyyy')}"></span>
+                    </p>
+                    <p th:if="${task.dataConclusao} != null" class="text-secondary">
+                        <strong><span>Data de Conclusão:</span></strong>
+                        <span th:text="${#temporals.format(task.dataConclusao, 'dd/MM/yyyy')}"></span>
+                    </p>
+                    <p class="text-secondary">
+                        <strong><span>Data de Finalização(Previsão):</span></strong>
+                        <span th:text="${#temporals.format(task.dataFinalizacao, 'dd/MM/yyyy')}"></span>
+                    </p>
                     <div class="mt-3 d-flex gap-2">
-                        <!-- botão editar -->
                         <a href="#" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
                             th:attr="data-bs-target='#modalEditar-' + ${task.id}">Editar</a>
-                        <!-- botão finalizar -->
-                        <form th:action="@{/todolist/concluir/{id} (id =${task.id})}" method="post">
+                        <form th:action="@{/todolist/concluir/{id}(id=${task.id})}" method="post">
                             <button type="submit" class="btn btn-outline-success btn-sm">Concluir</button>
                         </form>
-                        <!-- botão deletar -->
-                        <form th:action="@{/todolist/deletar/{id} (id =${task.id})}" method="post">
+                        <form th:action="@{/todolist/deletar/{id}(id=${task.id})}" method="post">
                             <button type="submit" class="btn btn-outline-danger btn-sm">Deletar</button>
                         </form>
                     </div>
@@ -77,6 +93,17 @@
                                             th:value="${task.descricao}" />
                                     </div>
                                     <div class="mb-3">
+                                        <label class="form-label">Status</label>
+                                        <select class="form-select" name="status">
+                                            <option value="PENDENTE" th:selected="${task.status == 'PENDENTE'}">Pendente
+                                            </option>
+                                            <option value="CONCLUIDA" th:selected="${task.status == 'CONCLUIDA'}">
+                                                Concluída</option>
+                                            <option value="EM_ANDAMENTO" th:selected="${task.status == 'EM_ANDAMENTO'}">
+                                                Em andamento</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
                                         <label class="form-label">Prioridade</label>
                                         <select class="form-select" name="prioridade">
                                             <option value="BAIXA" th:selected="${task.prioridade == 'BAIXA'}">Baixa
@@ -92,6 +119,7 @@
                                         <input type="date" class="form-control" name="dataFinalizacao"
                                             th:value="${task.dataFinalizacao}" />
                                     </div>
+                                    <input type="hidden" name="dataCriacao" th:value="${task.dataCriacao}" />
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             data-bs-dismiss="modal">Cancelar</button>
@@ -103,7 +131,7 @@
                     </div>
                 </div>
             </div>
-            <!-- MODAL -->
+            <!-- MODAL CRIAR -->
             <div class="modal fade" id="modalCriarTask" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -126,7 +154,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Prioridade</label>
                                     <select class="form-select" th:field="*{prioridade}">
-                                        <option value="" selected>Selecione a prioridade</option>
+                                        <option value="">Selecione a prioridade</option>
                                         <option value="BAIXA">Baixa</option>
                                         <option value="MEDIA">Média</option>
                                         <option value="ALTA">Alta</option>
