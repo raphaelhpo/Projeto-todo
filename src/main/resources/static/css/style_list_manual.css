@@ -1,0 +1,27 @@
+:root {
+    margin-left: 0 !important;
+}
+
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.card {
+    width: 300px;
+    height: 360px;
+    padding: 1rem;
+}
+
+.card-body p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

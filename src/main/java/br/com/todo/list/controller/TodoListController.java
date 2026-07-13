@@ -1,47 +1,78 @@
 package br.com.todo.list.controller;
 
+import java.util.List;
 import java.util.UUID;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import jakarta.persistence.Id;
-
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping("todolist/")
+import br.com.todo.list.dto.create.TaskCreateDTO;
+import br.com.todo.list.dto.response.TaskResponseDTO;
+import br.com.todo.list.service.TodoListService;
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("api/todolist/")
 public class TodoListController {
+    TodoListService service;
 
-    @PostMapping("task/criar")
-    public void criarTask(@RequestBody String entity) {
-
+    private TodoListController(TodoListService service) {
+        this.service = service;
     }
 
-    @GetMapping("task/consultar")
-    public void visualizarTasks(@RequestParam String... strings) {
-
+    @PostMapping("/criar")
+    public ResponseEntity<String> criarTask(@RequestBody @Valid TaskCreateDTO task) {
+        try {
+            service.criarTask(task);
+            return ResponseEntity.status(HttpStatus.CREATED).body(HttpStatus.CREATED.toString());
+        } catch (Exception e) {
+            // TODO: handle exception
+            throw new RuntimeException("Erro ao inserir dados.", e.getCause());
+        }
     }
 
-    @GetMapping("task/consultar")
-    public void visualizarTask(@RequestParam String param) {
-
+    @GetMapping("/consultar")
+    public ResponseEntity<List<TaskResponseDTO>> visualizarTasks() {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.consultarTodasTasks());
+        } catch (Exception e) {
+            // TODO: handle exception
+            throw new RuntimeException("Erro ao consultar dados.", e.getCause());
+        }
     }
 
-    @PutMapping("path/{id}")
-    public void editarTask(@PathVariable String id, @RequestBody String entity) {
-
+    @GetMapping("/consultar/{id}")
+    public ResponseEntity<TaskResponseDTO> visualizarTask(@RequestParam UUID id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.consultarTask(id));
+        } catch (Exception e) {
+            // TODO: handle exception
+            throw new RuntimeException("Erro ao inserir dados.", e.getCause());
+        }
     }
 
-    @DeleteMapping()
-    public void excluirTask(@PathVariable String id) {
+    @PutMapping("/concluir/task/{id}")
+    public ResponseEntity<TaskResponseDTO> concluirTask(@PathVariable UUID id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.concluirTask(id));
+        } catch (Exception e) {
+            // TODO: handle exception
+            throw new RuntimeException("Erro ao concluir task.", e.getCause());
+        }
+    }
 
+    @DeleteMapping("/deletar/task/{id}")
+    public void excluirTask(@PathVariable UUID id) {
+        service.deletarTask(id);
     }
 
 }
