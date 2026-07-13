@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.todo.list.dto.create.TaskCreateDTO;
 import br.com.todo.list.dto.response.TaskResponseDTO;
+import br.com.todo.list.dto.update.TaskUpdateDTO;
 import br.com.todo.list.enums.Status;
 import br.com.todo.list.mapper.TaskMapper;
 import br.com.todo.list.model.Task;
@@ -20,6 +21,11 @@ public class TodoListService {
 
     private TodoListService(TodoListRepository repository) {
         this.repository = repository;
+    }
+
+    public void editarTask(UUID uuid, TaskUpdateDTO taskDto) {
+        this.consultarTask(uuid);
+        repository.save(TaskMapper.toEntity(taskDto));
     }
 
     public TaskResponseDTO criarTask(TaskCreateDTO taskDto) {
@@ -52,7 +58,7 @@ public class TodoListService {
         return TaskMapper.toResponse(task);
     }
 
-    public void deletarTask(UUID id) {
-        repository.deleteById(id);
+    public void deletarTask(UUID uuid) {
+        repository.deleteById(uuid);
     }
 }
